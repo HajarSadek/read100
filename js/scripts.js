@@ -78,3 +78,39 @@ function fadeIn(el, display) {
         }
     })();
 };
+var booktext
+var booksumm
+function savebook() {
+    booktext = document.getElementById("book").value;
+    booksumm = findMostFrequent(booktext,100)
+    document.getElementById("summ").innerText = booksumm.join(" ");
+};
+
+const findMostFrequent = (str = '', num = 1) => {
+    const strArr = str.split(' ');
+    const map = {};
+    strArr.forEach(word => {
+       if(map.hasOwnProperty(word)){
+          map[word]++;
+       }else{
+          map[word] = 1;
+       }
+    });
+    const frequencyArr = Object.keys(map).map(key => [key, map[key]]);
+    frequencyArr.sort((a, b) => b[1] - a[1]);
+    for (var i = frequencyArr.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = frequencyArr[i];
+        frequencyArr[i] = frequencyArr[j];
+        frequencyArr[j] = temp;
+    }
+    return frequencyArr.slice(0, num).map(el => el[0]);
+ };
+ function readbook(){
+    let utter = new SpeechSynthesisUtterance();
+    utter.lang = 'en-US';
+    utter.text = booksumm;
+    utter.volume = 1;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utter);
+ };
